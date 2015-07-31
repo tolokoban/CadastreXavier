@@ -1,0 +1,13 @@
+{
+  "title": "FastCadastreX",
+  "name": "fastcadastrex",
+  "version": "0.0.1",
+  "description": "Get PDF of a piece of french cadastre with minimal clicks",
+  "main": "index.js",
+  "author": "Tolokoban",
+  "engines": {
+    "firefox": ">=38.0a1",
+    "fennec": ">=38.0a1"
+  },
+  "license": "GPL-3.0"
+}
