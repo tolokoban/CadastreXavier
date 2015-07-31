@@ -13,10 +13,13 @@ window.Tlk = (function() {
     return tag("div", css);
   }
   function later(delay, arg) {
+    console.log("later(" + delay + ")");
     return new Promise(
       function(resolve, reject) {
-        setTimeout(
+        console.log("choubichoubi");
+        window.setTimeout(
           function() {
+            console.log("---------..---------");
             resolve(arg);
           },
           delay
@@ -28,7 +31,7 @@ window.Tlk = (function() {
     if (window[obj]) {
       slot(window[obj]);
     } else {
-      setTimeout(
+      window.setTimeout(
         function() {
           console.log("wait on window." + obj);
           whenDefined(obj, slot);
@@ -39,7 +42,7 @@ window.Tlk = (function() {
   }
 
   return {
-    on: function(ids, slot) {
+    on: function(ids) {
       return new Promise(
         function(resolve, reject) {
           if (!Array.isArray(ids)) {
@@ -66,10 +69,10 @@ window.Tlk = (function() {
                 window.clearInterval(timer);
                 timer = null;
                 window.setTimeout(
-                  function() { 
+                  function() {
                     console.log(">>> resolve: " + JSON.stringify(ids));
                     console.log(elems);
-                    resolve(elems); 
+                    resolve(elems);
                     console.log("<<< resolve");
                   },
                   50
@@ -81,15 +84,16 @@ window.Tlk = (function() {
         }
       );
     },
-    step1: function() {
+    step1: function(code) {
       var url = 'http://www.cadastre.gouv.fr/scpc/afficherRechercherPlanCad.do';
-      var code = prompt("section-parcelle Commune :", "AB-2116 collonges-au-mont-d'or");
+      //var code = prompt("section-parcelle Commune :", "AB-2116 collonges-au-mont-d'or");
+      //var code = "AB-2116 collonges-au-mont-d'or";
       var rx = /^[ \t]*([^ ,;-]+)[ ,-]+([^ ,;\t]+)[ ,;\t]+(.+)/;
       var matches = rx.exec(code);
       var section = matches[1];
       var parcelle = matches[2];
       var ville = matches[3].trim();
-      location.href = url + "?ville=" + encodeURIComponent(ville) 
+      location.href = url + "?ville=" + encodeURIComponent(ville)
         + "&sectionLibelle=" + encodeURIComponent(section)
         + "&numeroParcelle=" + encodeURIComponent(parcelle);
     },

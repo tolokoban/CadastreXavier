@@ -13,17 +13,35 @@ var button = Buttons.ActionButton({
   onClick: handleClick
 });
 
+
+var modal = require("sdk/panel").Panel({
+  contentURL: self.data.url("text-entry.html"),
+  contentScriptFile: self.data.url("get-text.js")
+});
+
+modal.on("show", function() {
+  modal.port.emit("show");
+});
+
 function handleClick(state) {
-  var tab = Tabs.open("http://www.cadastre.gouv.fr/");
-  //var tab = tabs.open("http://www.cadastre.gouv.fr/scpc/afficherRechercherPlanCad.do");
+  var tab = Tabs.activeTab;
+  if (tab) {
+    tab.url = "http://www.cadastre.gouv.fr/";
+  } else {
+    tab = Tabs.open("http://www.cadastre.gouv.fr/");
+  }
 }
 
 Tabs.on('ready', function(tab) {
   var worker;
   if (tab.url == "http://www.cadastre.gouv.fr/") {
-    worker = tab.attach({
-      contentScriptFile: self.data.url("common.js"),
-      contentScript: "Tlk.step1()"
+    modal.show();
+    modal.port.on("text-entered", function (text) {
+      worker = tab.attach({
+        contentScriptFile: self.data.url("common.js"),
+        contentScript: "Tlk.step1(" + JSON.stringify(text) + ")"
+      });
+      modal.hide();
     });
   }
   else if (tab.url.indexOf("/afficherRechercherPlanCad.do") > -1) {
